@@ -1,0 +1,22 @@
+include ../../assets/bemtopug/bemto
+include ../connect/_blocks.pug
+
+doctype
+html(lang='ru', prefix='og: http://ogp.me/ns#')
+
+  include ../template/_head.pug
+
+  body
+
+    //- +header()
+    //- include  ../../blocks/header/header.pug
+
+    main
+
+      block content
+
+    //- +footer()
+
+    //- include  ../../blocks/footer/footer.pug
+
+    script(src='js/script.min.js')

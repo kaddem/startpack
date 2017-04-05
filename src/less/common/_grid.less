@@ -1,0 +1,82 @@
+// Класс .container присваиваем как миксин
+.container(@offset) {
+  padding-right: @offset/2;
+  padding-left: @offset/2;
+  margin: 0 auto;
+  .clearfix();
+  box-sizing: border-box;
+  // width: @container_desktop_min;
+  // width: @container_phone;
+
+  @media screen and (min-width: @width_tablet){
+    // width: @container_tablet;
+  }
+
+  @media screen and (min-width: @width_desktop_min){
+    // width: @container_desktop_min;
+  }
+
+  @media screen and (min-width: @width_desktop_middle){
+    width: @container_desktop_middle;
+  }
+
+  @media screen and (min-width: @width_desktop_wide){
+    width: @container_desktop_wide;
+  }
+    
+}
+
+
+// отрицательные марджины для непосредственного родителя у колонок
+.row(@offset){
+  margin-left: -@offset/2;
+  margin-right: -@offset/2;
+  .clearfix();
+}
+
+// общие стили для колонок на флоатах. Задаем миксином блоку-колонке
+.col(@offset, @float) {   // Расстояние между колонками в px, флоатим left или right
+  padding: 0 @offset/2;
+  float: @float;
+  box-sizing: border-box;
+}
+
+// Генерируем классы 12 колоночной сетки
+.generate-columns12(@n, @i: 1) when (@i =< @n) {
+
+  .col12-@{i} {
+    width: (@i * 100% / @n); // ширина колонки в %
+  }
+  .col12-offset-@{i} {
+    margin-left: (@i * 100% / @n);  // отступы между колонками кратные ширине
+  }                                 // колонки в 1/12. margin слева
+
+  .col12-offset-r-@{i} {
+    margin-right: (@i * 100% / @n); // отступы между колонками кратные ширине
+  }                                 // колонки в 1/12. margin справа
+
+  .generate-columns12(@n, (@i + 1));
+}
+
+.generate-columns12(12); // на выходе классы .col12-1 (1/12), .col12-2 (2/12) и т.д.
+
+
+
+// Генерируем классы 5 колоночную сетку
+.generate-columns5(@n, @i: 1) when (@i =< @n) {
+
+  .col5-@{i} {
+    width: (@i * 100% / @n); // ширина колонки в %
+  }
+  .col5-offset-@{i} {
+    margin-left: (@i * 100% / @n);  // отступы между колонками кратные ширине
+  }                                 // колонки в 1/12. margin слева
+
+  .col5-offset-r-@{i} {
+    margin-right: (@i * 100% / @n); // отступы между колонками кратные ширине
+  }                                 // колонки в 1/12. margin справа
+
+  .generate-columns5(@n, (@i + 1));
+}
+
+.generate-columns5(5); // на выходе классы .col5-1 (1/5), .col5-2 (2/5) и т.д.
