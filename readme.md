@@ -34,7 +34,7 @@ $ node newBlock.js blockName blockName2
 Создаются папки по имени блоков с вложенными одноименными pug и less файлами
 ```
 src/blocks/{blockName}/blockName.pug
-src/blocks/{blockName}/blockName.jade
+src/blocks/{blockName}/blockName.less
 ```
 
 В диспетчере подключений pug прописываются инклюды созданных БЭМ блоков
