@@ -78,7 +78,7 @@ const path = {
   },
   watch: {
     // jade: ['src/html/**/*.jade', 'src/blocks/**/*.jade'],
-    jade: 'src/html/**/*.pug',
+    jade: 'src/pug/**/*.pug',
     js: 'src/js/**/*.js',
     less: ['src/less/**/*.less', 'src/blocks/**/*.less'],
     img: 'src/img/*.*',
