@@ -1,4 +1,60 @@
+/**
+ * Usage
+ *
+ * Build project:
+ * $ gulp
+ * or
+ * $ gulp build
+ *
+ * Watch for sass changes
+ * $ gulp watch
+ */
+
 'use strict';
+
+// common
+const gulp          = require('gulp');
+const del           = require('del');
+const plumber       = require('gulp-plumber');
+const gutil         = require('gulp-util');
+const sourcemaps    = require('gulp-sourcemaps');
+const gulpif        = require('gulp-if');
+const notify        = require('gulp-notify');
+const runSequence   = require('run-sequence');
+const browserSync   = require('browser-sync').create();
+const changed       = require('gulp-changed');
+const debug         = require('gulp-debug');
+const newer         = require('gulp-newer');
+
+
+// jade
+const pug           = require('gulp-pug');
+const cached        = require('gulp-cached');
+const progeny       = require('gulp-progeny');
+const filter        = require('gulp-filter');
+const prettify      = require('gulp-prettify');
+
+// less
+const less          = require('gulp-less');
+const postcss       = require('gulp-postcss');
+const autoprefixer  = require('autoprefixer');
+const mqpacker      = require('css-mqpacker');
+const cleancss      = require('gulp-cleancss');
+const rename        = require('gulp-rename');
+
+// js
+const browserify    = require('browserify');
+const glob          = require('glob');
+const source        = require('vinyl-source-stream');
+const buffer        = require('vinyl-buffer');
+const uglify        = require('gulp-uglify');
+const concat        = require('gulp-concat');
+
+// img
+const imagemin      = require('gulp-imagemin');
+
+// png-sprite
+const spritesmith   = require('gulp.spritesmith');
 
 // Set Env
 // process.env.NODE_ENV = 'development';
@@ -7,50 +63,60 @@ process.env.NODE_ENV = 'production';
 // Check ENV
 global.devBuild = process.env.NODE_ENV !== 'production';
 
+/**
+ * Configuring paths
+ * @type {Object}
+ */
+var paths = {};
 
-// common
-const gulp = require('gulp');
-const del = require('del');
-const plumber = require('gulp-plumber');
-const gutil = require('gulp-util');
-const sourcemaps = require('gulp-sourcemaps');
-const gulpif = require('gulp-if');
-const notify = require('gulp-notify');
-const runSequence =  require('run-sequence');
-const browserSync = require('browser-sync').create();
-const changed = require('gulp-changed');
-const debug = require('gulp-debug');
-const newer = require('gulp-newer');
+paths.srcBase         = 'src';
+paths.src             = {};
+paths.src.scriptsBase = paths.srcBase + '/scripts';
+paths.src.scripts     = paths.src.scriptsBase + '/**/*.js';
+paths.src.stylesBase  = paths.srcBase + '/styles';
+paths.src.styles      = paths.src.stylesBase + '/**/*.scss';
+paths.src.tpl         = paths.src.scriptsBase + '/**/*.hbs';
+paths.src.jadeBase    = paths.srcBase + '/jade';
+paths.src.jade        = paths.src.jadeBase + '/**/*.jade';
+paths.src.sprites     = paths.srcBase + '/sprites/1x/*.png';
+paths.src.sprites2x   = paths.srcBase + '/sprites/2x/*.png';
+paths.src.spriteSvg   = paths.srcBase + '/sprites/svg/**/*.svg';
 
+paths.buildBase          = 'www';
+paths.build              = {};
+paths.build.scripts      = paths.buildBase + '/scripts';
+paths.build.scriptsFiles = [paths.buildBase + '/scripts/**/*.js', '!www/scripts/lib/**/*'];
+paths.build.styles       = paths.buildBase + '/styles';
+paths.build.stylesFiles  = paths.buildBase + '/styles/**/*.css';
+paths.build.tpl          = paths.build.scripts;
+paths.build.jade         = paths.buildBase + '/html';
+paths.build.spriteSvg    = paths.buildBase + '/img/sprite';
 
-// jade
-const pug = require('gulp-pug');
-const cached = require('gulp-cached');
-const progeny = require('gulp-progeny');
-const filter = require('gulp-filter');
-const prettify = require('gulp-prettify');
+paths.html = paths.buildBase + '/**/*.html';
 
-// less
-const less = require('gulp-less');
-const postcss = require('gulp-postcss');
-const autoprefixer = require('autoprefixer');
-const mqpacker = require('css-mqpacker');
-const cleancss = require('gulp-cleancss');
-const rename = require('gulp-rename');
-
-// js
-const browserify = require('browserify');
-const glob = require('glob');
-const source = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
-const uglify = require('gulp-uglify');
-const concat = require('gulp-concat');
-
-// img
-const imagemin = require('gulp-imagemin');
-
-// png-sprite
-const spritesmith = require('gulp.spritesmith');
+var buildCss = function() {
+    return gulp.src(paths.src.styles)
+        .pipe(sass())
+        .on('error', notify.onError({
+            message: 'Line: <%= error.lineNumber %>:' +
+            ' <%= error.message %>' +
+            '\n<%= error.fileName %>',
+            title: '<%= error.plugin %>'
+        }))
+        .on('error', function() {
+            this.emit('end');
+        })
+        .pipe(postcss([
+            flexbugsfixes(),
+            autoprefixer({
+                browsers: ['last 3 versions'],
+                cascade : false
+            })
+        ]))
+        .pipe(combineMq())
+        .pipe(gulp.dest(paths.build.styles))
+        .pipe(browserSync.stream());
+};
 
 // Path
 const path = {
@@ -106,12 +172,9 @@ gulp.task('pug', function() {
 gulp.task('less', function () {
   return gulp.src(path.src.less)
     .pipe(sourcemaps.init())
-    // .pipe(debug({title: 'map init'}))
     .pipe(plumber({ errorHandler: onError }))
-    // .pipe(debug({title: 'plumber'}))
     .pipe(less())
     .pipe(plumber({ errorHandler: onError }))
-    // .pipe(debug({title: 'less'})) 
     .pipe(postcss([
       autoprefixer({ browsers: ['last 5 version'] }),
       mqpacker({ sort: true }),
@@ -120,10 +183,6 @@ gulp.task('less', function () {
     .pipe(debug({title: 'PostCss'})) 
     .pipe(sourcemaps.write())
     .pipe(gulp.dest(path.build.css))
-    // .pipe(cleancss())
-    // .pipe(rename('style.min.css'))
-    // .pipe(sourcemaps.write())
-    // .pipe(gulp.dest(path.build.css))
 });
 
 // Compilation js v2 

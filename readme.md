@@ -52,65 +52,74 @@ src/less/style.less
 
 ## Структура папок и файлов
 ```
-src
-├───assets
-│   └───bemtopug
+project
+├───src
+│   ├───blocks
+│   │   └───blockName
+│   │       ├───blockName.html
+│   │       └───blockName.less
+│   │
+│   ├───html
+│   │   ├───common
+│   │   │   ├───_head.html
+│   │   │   └───_scripts.html
+│   │   │
+│   │   ├───pages
+│   │   │   ├───index.html
+│   │   │   └───etc.
+│   │   │
+│   │   └───template
+│   │       ├───_header.html
+│   │       ├───_header_index.html
+│   │       ├───_footer.html
+│   │       └───etc.
+│   │
+│   ├───less
+│   │   ├───common
+│   │   │   ├───_grid.less
+│   │   │   ├───_fonts.less
+│   │   │   ├───_png-sprite.less
+│   │   │   ├───_variables.less
+│   │   │   └───etc.
+│   │   │
+│   │   ├───vendor
+│   │   │   ├───normalize.css
+│   │   │   └───bootstrap
+│   │   │
+│   │   ├───mixin
+│   │   │   ├───_clearfix.less
+│   │   │   └───etc.
+│   │   │
+│   │   └───style.less (диспетчер подключений .less файлов)
+│   │
+│   ├───scripts
+│   │   ├───vendor
+│   │   │   ├───jQuery.js
+│   │   │   └───etc.js
+│   │   │
+│   │   └───scripts
+│   │       └───myscript.js
+│   │
+│   └───sprite
+│       ├───png
+│       │   ├───icon-1.png
+│       │   └───icon-2.png
+│       │
+│       ├───png@2
+│       │   ├───icon-1@2.png
+│       │   └───icon-2@2.png
+│       │
+│       └───png@3
+│           ├───icon-1@3.png
+│           └───icon-2@3.png
 │
-├───blocks
-│   └───blockName
-│       ├───blockName.pug
-│       └───blockName.less
-│
-├───fonts
-│   ├───font.ttf
-│   ├───font.woff
-│   └───font.woff2
-│
-├───pug
-│   ├───connect
-│   │   └───_blocks.pug
-│   │
-│   ├───layout
-│   │   └───_layoutBase.pug
-│   │
-│   ├───pages
-│   │   └───index.pug
-│   │
-│   └───template
-│       ├───_head.pug
-│       ├───_header.pug
-│       └───_footer.pug
-│
-├───less
-│   ├───common
-│   │   ├───_grid.less
-│   │   ├───_fonts.less
-│   │   ├───_png-sprite.less
-│   │   └───_variables.less
-│   │
-│   ├───vendor
-│   │   ├───normalize.css
-│   │   └───bootstrap
-│   │
-│   ├───mixin
-│   │   └───_clearfix.less
-│   │
-│   └───style.less (диспетчер подключений .less файлов)
-│
-├───js
-│   ├───vendor
-│   │   ├───jQuery.js
-│   │   └───etc.js
-│   │
-│   └───scripts
-│       └───myscript.js
-│
-└───img
-    ├───png-sprite
-    │   ├───file1.png
-    │   └───file2.png
+└───www
+    ├───fonts
+    │   ├───font.woff2
+    │   ├───font.woff
+    │   └───font.ttf
     │
-    ├───images1.jpg
-    └───images2.png
-
+    └───img
+        ├───images1.jpg
+        └───images2.png
 ```

@@ -1,14 +1,11 @@
 {
   "name": "Startpack",
-  "version": "0.1.0",
-  "description": "front-end building system",
-  "main": "gulpfile.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "gulp": "./node_modules/.bin/gulp"
+  "version": "1.0.0",
+  "author": "Kirill Demidov <kademidov@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaddem/startpack"
   },
-  "author": "Kirill Demidov",
-  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.7.7",
     "browser-sync": "^2.18.8",
